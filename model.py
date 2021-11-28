@@ -3,7 +3,7 @@ import scipy as sp
 import cv2
 from keras.preprocessing import image
 from keras.models import load_model
-
+import ray 
 classifier = load_model('classifier1.h5')
 
 def get_img_array(path):
@@ -37,6 +37,7 @@ def get_cells_img(np_arr_img, n=64): # considers all n X n grids
     return sub_imgs
 
 
+# @ray.remote
 def predict(img_path):
     inp_img = get_img_array(img_path)
     inp_img = cv2.resize(inp_img, (750, 500) )
@@ -48,10 +49,14 @@ def predict(img_path):
             fire_cnt += 1
     no_cnt = len(fire_pred) - fire_cnt
 
-    if fire_cnt > 5:
+
+    if fire_cnt > 10:
         return True
     else:
         return False
+
+
+
 
 
 
